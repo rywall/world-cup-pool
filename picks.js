@@ -40,6 +40,26 @@ const ENTRANTS = [
     },
   },
 
+  {
+    name: 'Nicole',
+    teamName: '¡Viva la Vútball!',
+    champion: 'Uruguay',
+    picks: {
+      A: ['South Africa', 'Mexico'],
+      B: ['Canada', 'Switzerland'],
+      C: ['Morocco', 'Haiti'],
+      D: ['Paraguay', 'Australia'],
+      E: ['Ivory Coast', 'Ecuador'],
+      F: ['Netherlands', 'Japan'],
+      G: ['Belgium', 'Egypt'],
+      H: ['Spain', 'Uruguay'],
+      I: ['France', 'Senegal'],
+      J: ['Argentina', 'Algeria'],
+      K: ['Colombia', 'Portugal'],
+      L: ['Croatia', 'England'],
+    },
+  },
+
   // Copy this template for each family member:
   // {
   //   name: 'Name',
