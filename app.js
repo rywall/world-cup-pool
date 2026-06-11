@@ -7,6 +7,24 @@ let dataNote = '';   // shown in the status bar when we're on stale/cached data
 const teamsByName = new Map(TEAMS.map((t) => [t.name, t]));
 let currentFilter = 'today';
 const expanded = new Set(); // entrant names with open detail panels
+let firstRender = true;     // staggered entrance animations only on the first data render
+
+// fun rotating messages under the bouncing-ball loader
+const LOADER_MSGS = [
+  'Inflating the match ball…',
+  'Mowing the pitch…',
+  'Warming up the keepers…',
+  'Consulting VAR…',
+  'Handing out orange slices…',
+  'Practicing goal celebrations…',
+];
+let loaderMsgIdx = 0;
+const loaderTimer = setInterval(() => {
+  loaderMsgIdx++;
+  document.querySelectorAll('.loader-text').forEach((el, i) => {
+    el.textContent = LOADER_MSGS[(loaderMsgIdx + i) % LOADER_MSGS.length];
+  });
+}, 1500);
 
 // ---------- data loading ----------
 // ESPN's public scoreboard API sends Access-Control-Allow-Origin: * — the
@@ -157,14 +175,14 @@ function renderLeaderboard() {
     html += `<div class="error-banner">⚠️ These picks don't match any team name (check picks.js): ${esc(allInvalid.join(', '))}</div>`;
   }
 
-  html += '<table class="lb-table"><tbody>';
+  html += `<table class="lb-table${firstRender ? ' animate-in' : ''}"><tbody>`;
   rows.forEach((r, i) => {
     const champClass = r.champHit ? 'champ-chip hit' : 'champ-chip';
     const champNote = r.champHit ? ' +10!' : r.championDecided ? ' ❌' : '';
     const open = expanded.has(r.entrant.name);
 
     html += `
-      <tr class="lb-row rank-${i + 1}" data-name="${esc(r.entrant.name)}">
+      <tr class="lb-row rank-${i + 1}" data-name="${esc(r.entrant.name)}" style="animation-delay:${i * 90}ms">
         <td>${medals[i] ? `<span class="rank-medal">${medals[i]}</span>` : `<span class="rank-num">${i + 1}</span>`}</td>
         <td>
           <div class="entrant-name">${esc(r.entrant.name)}</div>
@@ -174,7 +192,7 @@ function renderLeaderboard() {
           <div class="breakdown"><b>${r.w}</b> wins · <b>${r.d}</b> draws · <b>${r.cs}</b> clean sheets</div>
           <div class="breakdown">tiebreaks: <b>${r.gf}</b> goals · <b>${r.gd >= 0 ? '+' : ''}${r.gd}</b></div>
         </td>
-        <td>
+        <td class="champ-cell">
           <span class="${champClass}">👑 ${flagImg(r.entrant.champion, 18)} ${esc(r.entrant.champion)}${champNote}</span>
         </td>
         <td class="pts-big">${r.total}<span class="pts-label">pts</span></td>
@@ -275,6 +293,7 @@ function renderMatches() {
 
   let html = '';
   let lastDay = '';
+  let rowIdx = 0;
   for (const g of list) {
     const dayLabel = g.date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
     if (dayLabel !== lastDay) {
@@ -288,14 +307,16 @@ function renderMatches() {
     else { score = g.date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); scoreClass = 'upcoming'; }
 
     html += `
-      <div class="match-row">
+      <div class="match-row" style="animation-delay:${Math.min(rowIdx++ * 50, 700)}ms">
         <div class="match-team home ${pickedByAnyone(g.home.name) ? 'picked-any' : ''}">${esc(g.home.name)} ${flagImg(g.home.name)}</div>
         <div class="match-score ${scoreClass}">${esc(score)}</div>
         <div class="match-team ${pickedByAnyone(g.away.name) ? 'picked-any' : ''}">${flagImg(g.away.name)} ${esc(g.away.name)}</div>
         <div class="match-meta">${esc(roundLabel(g))}</div>
       </div>`;
   }
-  document.getElementById('matches').innerHTML = html;
+  const matchesEl = document.getElementById('matches');
+  matchesEl.classList.toggle('animate-in', firstRender);
+  matchesEl.innerHTML = html;
 }
 
 function renderAll() {
@@ -304,6 +325,10 @@ function renderAll() {
   renderMatches();
   document.getElementById('updateStatus').textContent =
     `Live scores · updated ${new Date().toLocaleTimeString()} · auto-refreshes every minute${dataNote}`;
+  if (firstRender) {
+    firstRender = false;
+    clearInterval(loaderTimer);
+  }
 }
 
 // ---------- boot ----------
@@ -322,6 +347,12 @@ async function refresh() {
     renderAll();
   } catch (err) {
     document.getElementById('updateStatus').textContent = '⚠️ Score feed unreachable — retrying in a minute';
+    if (firstRender) {
+      clearInterval(loaderTimer);
+      document.querySelectorAll('.loader-text').forEach((el) => {
+        el.textContent = '⚠️ Couldn’t reach the score feed — retrying every minute';
+      });
+    }
   }
 }
 

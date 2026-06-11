@@ -217,6 +217,7 @@ main {
 }
 .champ-chip.hit { background: #fff3c4; border-color: var(--gold); }
 .champ-chip img { width: 18px; border-radius: 2px; }
+.champ-cell { text-align: center; }
 
 /* expanded picks panel */
 .detail-row td {
@@ -310,6 +311,71 @@ main {
 .match-score.live { background: var(--live-red); }
 
 .match-meta { font-size: 0.7rem; color: #7c8d81; text-align: right; min-width: 70px; }
+
+/* ---------- Loading animations ---------- */
+
+.loader { text-align: center; padding: 26px 0 22px; }
+
+.loader-ball {
+  display: inline-block;
+  font-size: 3rem;
+  animation: loaderBounce 0.85s cubic-bezier(0.35, 0, 0.65, 1) infinite;
+}
+
+@keyframes loaderBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1.12, 0.85); }
+  15% { transform: translateY(-8px) rotate(40deg) scale(1, 1); }
+  50% { transform: translateY(-48px) rotate(180deg) scale(1, 1); }
+  85% { transform: translateY(-8px) rotate(320deg) scale(1, 1); }
+}
+
+.loader-shadow {
+  width: 56px;
+  height: 10px;
+  margin: 4px auto 12px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.28);
+  animation: loaderShadow 0.85s cubic-bezier(0.35, 0, 0.65, 1) infinite;
+}
+
+@keyframes loaderShadow {
+  0%, 100% { transform: scale(1); opacity: 0.45; }
+  50% { transform: scale(0.45); opacity: 0.15; }
+}
+
+.loader-text {
+  margin: 0;
+  font-weight: 800;
+  color: var(--grass-darker);
+  animation: loaderTextPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes loaderTextPulse { 50% { opacity: 0.55; } }
+
+/* cards pop in when the page first opens */
+main > section.card { animation: cardIn 0.55s ease backwards; }
+main > section.card:nth-of-type(2) { animation-delay: 0.1s; }
+main > section.card:nth-of-type(3) { animation-delay: 0.2s; }
+main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(26px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+/* rows slide in staggered on the first data render (delays set inline) */
+.animate-in .lb-row { animation: rowIn 0.45s ease backwards; }
+.animate-in .match-row { animation: rowIn 0.4s ease backwards; }
+
+@keyframes rowIn {
+  from { opacity: 0; transform: translateX(-22px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-ball, .loader-shadow, .loader-text, .spin, .spin-rev,
+  main > section.card, .animate-in .lb-row, .animate-in .match-row { animation: none; }
+}
 
 /* ---------- Rules / footer ---------- */
 .rules-list { margin: 8px 0 0; padding-left: 20px; line-height: 1.9; font-size: 0.92rem; }
