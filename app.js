@@ -342,10 +342,15 @@ document.getElementById('matchFilters').addEventListener('click', (e) => {
 });
 
 async function refresh() {
+  // Let the bouncing-ball loader play for at least 2s on first load,
+  // even when the data comes back instantly.
+  const minLoader = firstRender ? new Promise((r) => setTimeout(r, 2000)) : null;
   try {
     await loadData();
+    if (minLoader) await minLoader;
     renderAll();
   } catch (err) {
+    if (minLoader) await minLoader;
     document.getElementById('updateStatus').textContent = '⚠️ Score feed unreachable — retrying in a minute';
     if (firstRender) {
       clearInterval(loaderTimer);
