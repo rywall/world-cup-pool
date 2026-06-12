@@ -247,8 +247,9 @@ main {
   padding: 12px 10px;
   border-top: 8px solid var(--card-bg);
   vertical-align: middle;
+  text-align: center;
 }
-.lb-row td:first-child { border-radius: 12px 0 0 12px; width: 56px; text-align: center; }
+.lb-row td:first-child { border-radius: 12px 0 0 12px; width: 56px; }
 .lb-row td:last-child { border-radius: 0 12px 12px 0; }
 
 .lb-row.rank-1 td { background: linear-gradient(90deg, #fff3c4, #ffe89a); border-bottom: 2px solid var(--gold); }
@@ -292,7 +293,6 @@ main {
   font-family: 'Russo One', sans-serif;
   font-size: 1.5rem;
   color: var(--grass-darker);
-  text-align: right;
   white-space: nowrap;
 }
 .pts-label { font-size: 0.65rem; color: #5d6f63; display: block; text-transform: uppercase; }
@@ -313,7 +313,6 @@ main {
 }
 .champ-chip.hit { background: #fff3c4; border-color: var(--gold); }
 .champ-chip img { width: 18px; border-radius: 2px; }
-.champ-cell { text-align: center; }
 
 /* expanded picks panel */
 .detail-row td {
