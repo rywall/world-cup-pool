@@ -8,6 +8,7 @@ const teamsByName = new Map(TEAMS.map((t) => [t.name, t]));
 let currentFilter = 'today';
 const expanded = new Set(); // entrant names with open detail panels
 let firstRender = true;     // staggered entrance animations only on the first data render
+let prevRanks = new Map();  // entrant name -> leaderboard index, for move animations
 
 // fun rotating messages under the bouncing-ball loader
 const LOADER_MSGS = [
@@ -204,8 +205,45 @@ function renderLeaderboard() {
   });
   html += '</tbody></table>';
 
-  document.getElementById('leaderboard').innerHTML = html;
-  document.querySelectorAll('.lb-row').forEach((tr) =>
+  const container = document.getElementById('leaderboard');
+
+  // FLIP animation: remember where each row was before the re-render…
+  const oldTops = new Map();
+  container.querySelectorAll('.lb-row').forEach((tr) => {
+    oldTops.set(tr.dataset.name, tr.getBoundingClientRect().top);
+  });
+
+  container.innerHTML = html;
+
+  // …then glide rows from their old position to the new one, and flash
+  // anyone whose rank changed since the last refresh.
+  const newRanks = new Map(rows.map((r, i) => [r.entrant.name, i]));
+  if (!firstRender) {
+    container.querySelectorAll('.lb-row').forEach((tr) => {
+      const name = tr.dataset.name;
+      const oldTop = oldTops.get(name);
+      if (oldTop !== undefined) {
+        const delta = oldTop - tr.getBoundingClientRect().top;
+        if (Math.abs(delta) > 2) {
+          tr.style.transition = 'none';
+          tr.style.transform = `translateY(${delta}px)`;
+          tr.getBoundingClientRect(); // force reflow so the jump isn't animated
+          tr.style.transition = 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)';
+          tr.style.transform = '';
+          setTimeout(() => { tr.style.transition = ''; }, 750);
+        }
+      }
+      const prev = prevRanks.get(name);
+      const now = newRanks.get(name);
+      if (prev !== undefined && prev !== now) {
+        tr.classList.add(now < prev ? 'moved-up' : 'moved-down');
+        setTimeout(() => tr.classList.remove('moved-up', 'moved-down'), 1600);
+      }
+    });
+  }
+  prevRanks = newRanks;
+
+  container.querySelectorAll('.lb-row').forEach((tr) =>
     tr.addEventListener('click', () => {
       const name = tr.dataset.name;
       expanded.has(name) ? expanded.delete(name) : expanded.add(name);

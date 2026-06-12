@@ -372,9 +372,23 @@ main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
   to { opacity: 1; transform: none; }
 }
 
+/* flash when a leaderboard position changes (rows also glide via FLIP in JS) */
+.lb-row.moved-up td { animation: flashUp 1.5s ease; }
+.lb-row.moved-down td { animation: flashDown 1.5s ease; }
+
+@keyframes flashUp {
+  15%, 55% { filter: brightness(1.22) saturate(1.6); }
+}
+
+@keyframes flashDown {
+  15%, 55% { filter: brightness(0.9) saturate(0.5); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .loader-ball, .loader-shadow, .loader-text, .spin, .spin-rev,
-  main > section.card, .animate-in .lb-row, .animate-in .match-row { animation: none; }
+  main > section.card, .animate-in .lb-row, .animate-in .match-row,
+  .lb-row.moved-up td, .lb-row.moved-down td { animation: none; }
+  .lb-row { transition: none !important; }
 }
 
 /* ---------- Rules / footer ---------- */
