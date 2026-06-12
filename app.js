@@ -226,7 +226,7 @@ function renderLeaderboard() {
         </td>
         <td class="breakdown-cell">
           <div class="breakdown"><b>${r.w}</b> wins · <b>${r.d}</b> draws · <b>${r.cs}</b> clean sheets</div>
-          <div class="breakdown">tiebreaks: <b>${r.gf}</b> goals · <b>${r.gd >= 0 ? '+' : ''}${r.gd}</b></div>
+          <div class="breakdown">tiebreaks: <b>${r.gf}</b> goals for · <b>${r.gd >= 0 ? '+' : ''}${r.gd}</b> goal diff</div>
         </td>
         <td class="champ-cell">
           <span class="${champClass}">👑 ${flagImg(r.entrant.champion, 18)} ${esc(r.entrant.champion)}${champNote}</span>
