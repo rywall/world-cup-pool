@@ -184,6 +184,14 @@ main {
 
 .rank-medal { font-size: 1.5rem; }
 .rank-num { font-family: 'Russo One', sans-serif; font-size: 1.1rem; color: #5d6f63; }
+.tie-tag {
+  display: block;
+  font-family: 'Russo One', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.5px;
+  color: #5d6f63;
+  margin-top: -2px;
+}
 
 .entrant-name { font-weight: 800; font-size: 1.05rem; }
 .entrant-team {

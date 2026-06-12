@@ -184,6 +184,14 @@ function renderLeaderboard() {
   const medals = ['🥇', '🥈', '🥉'];
   const allInvalid = [...new Set(rows.flatMap((r) => r.invalid))];
 
+  // Competition ranking (1-2-2-4): entrants whose every tiebreaker also matches
+  // — total points, goals for, and goal differential — share a rank and medal.
+  const tieKey = (r) => `${r.total}|${r.gf}|${r.gd}`;
+  const ranks = rows.map((r, i) => (i > 0 && tieKey(r) === tieKey(rows[i - 1]) ? null : i + 1));
+  for (let i = 0; i < ranks.length; i++) if (ranks[i] === null) ranks[i] = ranks[i - 1];
+  const rankCount = {};
+  ranks.forEach((rk) => (rankCount[rk] = (rankCount[rk] || 0) + 1));
+
   let html = '';
   if (allInvalid.length) {
     html += `<div class="error-banner">⚠️ These picks don't match any team name (check picks.js): ${esc(allInvalid.join(', '))}</div>`;
@@ -196,10 +204,16 @@ function renderLeaderboard() {
     const champClass = r.champHit ? 'champ-chip hit' : 'champ-chip';
     const champNote = r.champHit ? ' +10!' : r.championDecided ? ' ❌' : '';
     const open = expanded.has(r.entrant.name);
+    const rank = ranks[i];
+    const tied = rankCount[rank] > 1;
+    const tieTag = tied ? '<span class="tie-tag">TIE</span>' : '';
+    const rankCell = medals[rank - 1]
+      ? `<span class="rank-medal">${medals[rank - 1]}</span>${tieTag}`
+      : `<span class="rank-num">${tied ? 'T' : ''}${rank}</span>`;
 
     html += `
-      <tr class="lb-row rank-${i + 1}" data-name="${esc(r.entrant.name)}" style="animation-delay:${i * 90}ms">
-        <td>${medals[i] ? `<span class="rank-medal">${medals[i]}</span>` : `<span class="rank-num">${i + 1}</span>`}</td>
+      <tr class="lb-row rank-${rank}${tied ? ' tied' : ''}" data-name="${esc(r.entrant.name)}" style="animation-delay:${i * 90}ms">
+        <td>${rankCell}</td>
         <td>
           <div class="entrant-name">${esc(r.entrant.name)}</div>
           <div class="entrant-team">${esc(r.entrant.teamName)}</div>
