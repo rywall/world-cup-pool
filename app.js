@@ -267,8 +267,9 @@ function renderLeaderboard() {
     tr.addEventListener('click', () => {
       const name = tr.dataset.name;
       const entrant = ENTRANTS.find((e) => e.name === name);
-      if (entrant?.sound) new Audio(entrant.sound).play().catch(() => {});
-      expanded.has(name) ? expanded.delete(name) : expanded.add(name);
+      const opening = !expanded.has(name);
+      if (opening && entrant?.sound) new Audio(entrant.sound).play().catch(() => {});
+      opening ? expanded.add(name) : expanded.delete(name);
       renderLeaderboard();
     })
   );
