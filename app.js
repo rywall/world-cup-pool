@@ -396,6 +396,8 @@ function renderMatchDetail(g) {
       : `<div class="md-breakdown">Hasn't kicked off yet</div>`;
     const fansHtml = fans.length
       ? `<div class="md-fans">${fans
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name))
           .map((e) => `
             <div class="md-fan">
               <span class="md-fan-name">${esc(e.name)}</span>
