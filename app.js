@@ -221,7 +221,13 @@ function renderLeaderboard() {
       </tr>`;
 
     if (open) {
-      html += `<tr class="detail-row"><td colspan="5"><div class="picks-grid">${renderPicksGrid(r)}</div></td></tr>`;
+      html += `<tr class="detail-row"><td colspan="5">
+        <div class="picks-grid">${renderPicksGrid(r)}</div>
+        <div class="picks-tiebreak">
+          <div class="tb-row"><b>${r.w}</b> wins · <b>${r.d}</b> draws · <b>${r.cs}</b> clean sheets</div>
+          <div class="tb-row"><span class="tb-label">Tiebreakers</span> <b>${r.gf}</b> goals for · <b>${r.gd >= 0 ? '+' : ''}${r.gd}</b> goal diff</div>
+        </div>
+      </td></tr>`;
     }
   });
   html += '</tbody></table>';
