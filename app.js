@@ -44,6 +44,7 @@ function normalize(events) {
     const away = comp.competitors.find((c) => c.homeAway === 'away');
     const homeName = home.team.displayName;
     return {
+      id: e.id,
       home: { name: homeName, score: +(home.score || 0), winner: home.winner === true },
       away: { name: away.team.displayName, score: +(away.score || 0), winner: away.winner === true },
       state: e.status.type.state, // 'pre' | 'in' | 'post'
@@ -332,6 +333,62 @@ function pickedByAnyone(teamName) {
   return ENTRANTS.some((e) => Object.values(e.picks).flat().includes(teamName));
 }
 
+// ---------- goal celebrations ----------
+// Compare scores between refreshes; any increase triggers a full-screen
+// GOOOAL! overlay with confetti. Multiple goals in one refresh queue up.
+
+const goalQueue = [];
+let goalShowing = false;
+
+function detectGoals(before) {
+  for (const g of games) {
+    const old = before.get(g.id);
+    if (!old || !hasTeams(g) || g.state === 'pre') continue;
+    for (const side of ['home', 'away']) {
+      const prev = old.state === 'pre' ? 0 : old[side].score;
+      for (let n = prev; n < g[side].score; n++) goalQueue.push({ g, side });
+    }
+  }
+  showNextGoal();
+}
+
+const CONFETTI_COLORS = ['#f5b80c', '#e63946', '#0b8a3e', '#fff', '#4cc9f0', '#ff8fab'];
+
+function showNextGoal() {
+  if (goalShowing || !goalQueue.length) return;
+  goalShowing = true;
+  const { g, side } = goalQueue.shift();
+  const team = g[side].name;
+  const fans = ENTRANTS.filter((e) => Object.values(e.picks).flat().includes(team)).map((e) => e.name);
+  const fanLine =
+    fans.length === 0 ? '' :
+    fans.length === 1 ? `${fans[0]}'s pick! 🎉` :
+    `${fans.slice(0, -1).join(', ')} & ${fans[fans.length - 1]} picked them! 🎉`;
+
+  const confetti = Array.from({ length: 48 }, () => {
+    const c = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+    return `<span class="confetti-piece" style="left:${Math.random() * 100}%;background:${c};animation-duration:${2 + Math.random() * 1.6}s;animation-delay:${Math.random() * 0.7}s;transform:rotate(${Math.random() * 360}deg)"></span>`;
+  }).join('');
+
+  const overlay = document.getElementById('goalOverlay');
+  overlay.innerHTML = `
+    <div class="goal-celebration">
+      ${confetti}
+      <div class="goal-word">GOOOAL!</div>
+      <div class="goal-team">${flagImg(team, 42)} ${esc(team)}</div>
+      <div class="goal-score">${esc(g.home.name)} ${g.home.score} – ${g.away.score} ${esc(g.away.name)}</div>
+      ${fanLine ? `<div class="goal-picked">${esc(fanLine)}</div>` : ''}
+    </div>`;
+  overlay.hidden = false;
+
+  setTimeout(() => {
+    overlay.hidden = true;
+    overlay.innerHTML = '';
+    goalShowing = false;
+    showNextGoal();
+  }, 4200);
+}
+
 function renderMatches() {
   const today = new Date();
   const sameDay = (d) =>
@@ -404,9 +461,11 @@ async function refresh() {
   // Let the bouncing-ball loader play for at least 2s on first load,
   // even when the data comes back instantly.
   const minLoader = firstRender ? new Promise((r) => setTimeout(r, 2000)) : null;
+  const before = firstRender ? null : new Map(games.map((g) => [g.id, g]));
   try {
     await loadData();
     if (minLoader) await minLoader;
+    if (before && !dataNote) detectGoals(before);
     renderAll();
   } catch (err) {
     if (minLoader) await minLoader;

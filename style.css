@@ -399,7 +399,109 @@ main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
   15%, 55% { filter: brightness(0.9) saturate(0.5); }
 }
 
+/* ---------- GOOOAL! celebration overlay ---------- */
+
+#goalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.goal-celebration {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  animation: goalFade 4.2s ease forwards;
+  background: radial-gradient(ellipse at center, rgba(8, 24, 12, 0.78), rgba(8, 24, 12, 0.35));
+}
+
+@keyframes goalFade {
+  0% { opacity: 0; }
+  6%, 88% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.goal-word {
+  font-family: 'Russo One', sans-serif;
+  font-size: clamp(3rem, 14vw, 7.5rem);
+  letter-spacing: 3px;
+  background: linear-gradient(180deg, #fff 30%, var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 0 #8a6803) drop-shadow(0 8px 22px rgba(0, 0, 0, 0.6));
+  animation: goalPop 0.7s cubic-bezier(0.18, 1.6, 0.4, 1) backwards, goalWiggle 0.6s ease 0.8s 3;
+}
+
+@keyframes goalPop {
+  from { transform: scale(0) rotate(-10deg); }
+  to { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes goalWiggle {
+  25% { transform: rotate(-2.5deg) scale(1.03); }
+  75% { transform: rotate(2.5deg) scale(1.03); }
+}
+
+.goal-team {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Russo One', sans-serif;
+  font-size: clamp(1.4rem, 5vw, 2.4rem);
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+  animation: goalPop 0.6s cubic-bezier(0.18, 1.6, 0.4, 1) 0.25s backwards;
+}
+.goal-team img { border-radius: 4px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6); }
+
+.goal-score {
+  font-weight: 800;
+  font-size: clamp(1rem, 3.5vw, 1.4rem);
+  color: var(--gold);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  animation: goalPop 0.6s cubic-bezier(0.18, 1.6, 0.4, 1) 0.4s backwards;
+}
+
+.goal-picked {
+  font-weight: 800;
+  font-size: clamp(0.95rem, 3vw, 1.25rem);
+  color: #fff;
+  background: var(--accent);
+  padding: 6px 18px;
+  border-radius: 99px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  animation: goalPop 0.6s cubic-bezier(0.18, 1.6, 0.4, 1) 0.55s backwards;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -24px;
+  width: 11px;
+  height: 17px;
+  border-radius: 2px;
+  opacity: 0;
+  animation-name: confettiFall;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(108vh) rotate(660deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .goal-celebration, .goal-word, .goal-team, .goal-score, .goal-picked { animation: none; }
+  .confetti-piece { display: none; }
+
   .loader-ball, .loader-shadow, .loader-text, .spin, .spin-rev,
   main > section.card, .animate-in .lb-row, .animate-in .match-row,
   .lb-row.moved-up td, .lb-row.moved-down td { animation: none; }
