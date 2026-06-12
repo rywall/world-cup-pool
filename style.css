@@ -307,8 +307,9 @@ main {
 }
 .match-row:nth-child(even) { background: #f1f7ee; }
 
-.match-team { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; }
+.match-team { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; min-width: 0; overflow-wrap: anywhere; }
 .match-team.home { justify-content: flex-end; text-align: right; }
+.match-team img { flex-shrink: 0; }
 .match-team img { width: 24px; border-radius: 2px; box-shadow: 0 0 3px rgba(0,0,0,0.3); }
 .match-team.picked-any { color: var(--accent); }
 
@@ -531,4 +532,13 @@ footer {
 @media (max-width: 560px) {
   .breakdown-cell { display: none; }
   .card { padding: 14px; }
+
+  /* Keep match rows inside the viewport: shrink gaps/columns and let
+     long team names wrap instead of pushing the meta column off-screen. */
+  .match-row { gap: 6px; padding: 7px 8px; }
+  .match-team { font-size: 0.82rem; gap: 6px; }
+  .match-team img { width: 20px; }
+  .match-score { min-width: 52px; padding: 3px 6px; }
+  .match-score.upcoming { font-size: 0.72rem; }
+  .match-meta { min-width: 0; font-size: 0.62rem; }
 }
