@@ -84,7 +84,7 @@ const ENTRANTS = [
   },
 
   {
-    name: "UC",
+    name: "Cake",
     teamName: "Heffley Boners",
     champion: "Spain",
     picks: {
