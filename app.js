@@ -7,6 +7,7 @@ let dataNote = '';   // shown in the status bar when we're on stale/cached data
 const teamsByName = new Map(TEAMS.map((t) => [t.name, t]));
 let currentFilter = 'today';
 const expanded = new Set(); // entrant names with open detail panels
+const expandedMatches = new Set(); // match ids with open detail panels
 let firstRender = true;     // staggered entrance animations only on the first data render
 let prevRanks = new Map();  // entrant name -> leaderboard index, for move animations
 
@@ -336,6 +337,58 @@ function pickedByAnyone(teamName) {
   return ENTRANTS.some((e) => Object.values(e.picks).flat().includes(teamName));
 }
 
+function entrantsWithTeam(teamName) {
+  return ENTRANTS.filter((e) => Object.values(e.picks).flat().includes(teamName));
+}
+
+// Points a single team earned in one match (win/draw/clean-sheet), mirroring
+// the season-long rules in teamStats: a knockout game tied after extra time is
+// a draw, and a clean sheet is keeping the opponent off the scoreboard.
+function matchPoints(g, side) {
+  const us = g[side];
+  const them = side === 'home' ? g.away : g.home;
+  const parts = [];
+  let pts = 0;
+  if (us.score > them.score) { pts += POOL_CONFIG.pointsPerWin; parts.push(`Win +${POOL_CONFIG.pointsPerWin}`); }
+  else if (us.score === them.score) { pts += POOL_CONFIG.pointsPerDraw; parts.push(`Draw +${POOL_CONFIG.pointsPerDraw}`); }
+  if (them.score === 0) { pts += POOL_CONFIG.pointsPerCleanSheet; parts.push(`Clean sheet +${POOL_CONFIG.pointsPerCleanSheet}`); }
+  return { pts, parts };
+}
+
+// The expandable panel under a match: each team, the points it earned in this
+// game, and which entrants have it (with the points they banked).
+function renderMatchDetail(g) {
+  const played = isFinished(g) || isLive(g);
+  const side = (which) => {
+    const t = g[which];
+    const fans = entrantsWithTeam(t.name);
+    const mp = played ? matchPoints(g, which) : null;
+    const ptsBadge = mp
+      ? `<span class="md-pts${mp.pts > 0 ? ' pos' : ''}">+${mp.pts}</span>`
+      : `<span class="md-pts none">—</span>`;
+    const breakdown = mp
+      ? `<div class="md-breakdown">${mp.parts.length ? mp.parts.join(' · ') : 'No points'}${isLive(g) ? ' · live' : ''}</div>`
+      : `<div class="md-breakdown">Hasn't kicked off yet</div>`;
+    const fansHtml = fans.length
+      ? `<div class="md-fans">${fans
+          .map((e) => `
+            <div class="md-fan">
+              <span class="md-fan-name">${esc(e.name)}</span>
+              <span class="md-fan-team">${esc(e.teamName)}</span>
+              ${mp ? `<span class="md-fan-pts">+${mp.pts}</span>` : ''}
+            </div>`)
+          .join('')}</div>`
+      : `<div class="md-none">No one picked them 🤷</div>`;
+    return `
+      <div class="md-side">
+        <div class="md-team">${flagImg(t.name, 22)}<span class="md-name">${esc(t.name)}</span>${ptsBadge}</div>
+        ${breakdown}
+        ${fansHtml}
+      </div>`;
+  };
+  return `<div class="match-detail-inner">${side('home')}${side('away')}</div>`;
+}
+
 // ---------- goal celebrations ----------
 // Compare scores between refreshes; any increase triggers a full-screen
 // GOOOAL! overlay with confetti. Multiple goals in one refresh queue up.
@@ -425,17 +478,29 @@ function renderMatches() {
     else if (isLive(g)) { score = `${g.home.score} – ${g.away.score}`; scoreClass = 'live'; }
     else { score = g.date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); scoreClass = 'upcoming'; }
 
+    const open = expandedMatches.has(g.id);
     html += `
-      <div class="match-row" style="animation-delay:${Math.min(rowIdx++ * 50, 700)}ms">
-        <div class="match-team home ${pickedByAnyone(g.home.name) ? 'picked-any' : ''}">${esc(g.home.name)} ${flagImg(g.home.name)}</div>
-        <div class="match-score ${scoreClass}">${esc(score)}</div>
-        <div class="match-team ${pickedByAnyone(g.away.name) ? 'picked-any' : ''}">${flagImg(g.away.name)} ${esc(g.away.name)}</div>
-        <div class="match-meta">${esc(roundLabel(g))}</div>
+      <div class="match-item${open ? ' open' : ''}" data-id="${esc(g.id)}">
+        <div class="match-row" style="animation-delay:${Math.min(rowIdx++ * 50, 700)}ms">
+          <div class="match-team home ${pickedByAnyone(g.home.name) ? 'picked-any' : ''}">${esc(g.home.name)} ${flagImg(g.home.name)}</div>
+          <div class="match-score ${scoreClass}">${esc(score)}</div>
+          <div class="match-team ${pickedByAnyone(g.away.name) ? 'picked-any' : ''}">${flagImg(g.away.name)} ${esc(g.away.name)}</div>
+          <div class="match-meta">${esc(roundLabel(g))}<span class="match-caret">▾</span></div>
+        </div>
+        ${open ? `<div class="match-detail">${renderMatchDetail(g)}</div>` : ''}
       </div>`;
   }
   const matchesEl = document.getElementById('matches');
   matchesEl.classList.toggle('animate-in', firstRender);
   matchesEl.innerHTML = html;
+
+  matchesEl.querySelectorAll('.match-item').forEach((item) =>
+    item.querySelector('.match-row').addEventListener('click', () => {
+      const id = item.dataset.id;
+      expandedMatches.has(id) ? expandedMatches.delete(id) : expandedMatches.add(id);
+      renderMatches();
+    })
+  );
 }
 
 function renderAll() {
