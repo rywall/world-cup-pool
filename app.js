@@ -381,7 +381,6 @@ function renderMatchDetail(g) {
             <div class="md-fan">
               <span class="md-fan-name">${esc(e.name)}</span>
               <span class="md-fan-team">${esc(e.teamName)}</span>
-              ${mp ? `<span class="md-fan-pts">+${mp.pts}</span>` : ''}
             </div>`)
           .join('')}</div>`
       : `<div class="md-none">No one picked them 🤷</div>`;

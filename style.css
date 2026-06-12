@@ -370,7 +370,6 @@ main {
 .md-fan { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
 .md-fan-name { font-weight: 700; flex-shrink: 0; }
 .md-fan-team { color: #8a9a8e; font-size: 0.7rem; flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.md-fan-pts { font-weight: 800; color: var(--accent); flex-shrink: 0; }
 .md-none { font-size: 0.76rem; color: #9aa9a0; }
 
 .match-team { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; min-width: 0; overflow-wrap: anywhere; }
