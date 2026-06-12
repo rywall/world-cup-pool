@@ -352,11 +352,12 @@ main {
 .pick-team.out { opacity: 0.45; }
 .pick-team.out .tname { text-decoration: line-through; }
 
+/* Hidden on desktop: the tiebreak already appears in the breakdown-cell. */
 .picks-tiebreak {
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px dashed #d4ddca;
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 4px 16px;
   font-size: 0.78rem;
@@ -682,6 +683,7 @@ footer {
 
 @media (max-width: 560px) {
   .breakdown-cell { display: none; }
+  .picks-tiebreak { display: flex; }
   .card { padding: 14px; }
 
   /* Keep match rows inside the viewport: shrink gaps/columns and let
