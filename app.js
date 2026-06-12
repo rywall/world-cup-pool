@@ -499,7 +499,7 @@ function showNextGoal() {
 
   const confetti = Array.from({ length: 48 }, () => {
     const c = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
-    return `<span class="confetti-piece" style="left:${Math.random() * 100}%;background:${c};animation-duration:${2 + Math.random() * 1.6}s;animation-delay:${Math.random() * 0.7}s;transform:rotate(${Math.random() * 360}deg)"></span>`;
+    return `<span class="confetti-piece" style="left:${Math.random() * 100}%;background:${c};animation-duration:${3.5 + Math.random() * 2.5}s;animation-delay:${Math.random() * 1.2}s;transform:rotate(${Math.random() * 360}deg)"></span>`;
   }).join('');
 
   const overlay = document.getElementById('goalOverlay');
@@ -512,13 +512,16 @@ function showNextGoal() {
       ${fanLine ? `<div class="goal-picked">${esc(fanLine)}</div>` : ''}
     </div>`;
   overlay.hidden = false;
+  const sound = new Audio('sounds/goooooaall.mp3');
+  sound.play().catch(() => {});
 
   setTimeout(() => {
+    sound.pause();
     overlay.hidden = true;
     overlay.innerHTML = '';
     goalShowing = false;
     showNextGoal();
-  }, 4200);
+  }, 7000);
 }
 
 function renderMatches() {
