@@ -284,6 +284,10 @@ function renderLeaderboard() {
   }
   prevRanks = newRanks;
 
+  // Mbappé mode: while Ryan's picks are open, the header balls become Kylian
+  // and the pitch repaints in France colours (see .mbappe-mode in style.css).
+  document.body.classList.toggle('mbappe-mode', expanded.has('Ryan'));
+
   container.querySelectorAll('.lb-row').forEach((tr) =>
     tr.addEventListener('click', () => {
       const name = tr.dataset.name;
@@ -535,6 +539,10 @@ function renderAll() {
 }
 
 // ---------- boot ----------
+
+// ?open=Ryan pre-opens that entrant's picks panel (handy for sharing links)
+const preOpen = new URLSearchParams(location.search).get('open');
+if (preOpen) expanded.add(preOpen);
 
 document.getElementById('matchFilters').addEventListener('click', (e) => {
   const btn = e.target.closest('button[data-filter]');
