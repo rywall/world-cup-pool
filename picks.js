@@ -24,6 +24,7 @@ const ENTRANTS = [
     name: 'Ryan',
     teamName: 'Mbappé Maniacs',
     champion: 'France',
+    sound: 'sounds/mbappe.mp3', // optional: played when this row is clicked
     picks: {
       A: ['Mexico', 'South Korea'],
       B: ['Canada', 'Switzerland'],

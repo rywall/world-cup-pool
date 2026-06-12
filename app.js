@@ -266,6 +266,8 @@ function renderLeaderboard() {
   container.querySelectorAll('.lb-row').forEach((tr) =>
     tr.addEventListener('click', () => {
       const name = tr.dataset.name;
+      const entrant = ENTRANTS.find((e) => e.name === name);
+      if (entrant?.sound) new Audio(entrant.sound).play().catch(() => {});
       expanded.has(name) ? expanded.delete(name) : expanded.add(name);
       renderLeaderboard();
     })
