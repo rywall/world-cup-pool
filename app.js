@@ -85,6 +85,17 @@ const isFinished = (g) => g.state === 'post';
 const isLive = (g) => g.state === 'in';
 const hasTeams = (g) => teamsByName.has(g.home.name) && teamsByName.has(g.away.name);
 
+function liveTeamSet() {
+  const s = new Set();
+  for (const g of games) {
+    if (isLive(g) && hasTeams(g)) {
+      s.add(g.home.name);
+      s.add(g.away.name);
+    }
+  }
+  return s;
+}
+
 // ---------- scoring ----------
 
 function teamStats(teamName) {
@@ -176,6 +187,8 @@ function renderLeaderboard() {
     html += `<div class="error-banner">⚠️ These picks don't match any team name (check picks.js): ${esc(allInvalid.join(', '))}</div>`;
   }
 
+  const liveSet = liveTeamSet();
+
   html += `<table class="lb-table${firstRender ? ' animate-in' : ''}"><tbody>`;
   rows.forEach((r, i) => {
     const champClass = r.champHit ? 'champ-chip hit' : 'champ-chip';
@@ -188,6 +201,12 @@ function renderLeaderboard() {
         <td>
           <div class="entrant-name">${esc(r.entrant.name)}</div>
           <div class="entrant-team">${esc(r.entrant.teamName)}</div>
+          ${(() => {
+            const liveNow = r.teamRows.filter((t) => liveSet.has(t.team.name)).map((t) => t.team.name);
+            return liveNow.length
+              ? `<div class="lb-live"><span class="live-dot">●</span> ${esc(liveNow.join(', '))} playing now</div>`
+              : '';
+          })()}
         </td>
         <td class="breakdown-cell">
           <div class="breakdown"><b>${r.w}</b> wins · <b>${r.d}</b> draws · <b>${r.cs}</b> clean sheets</div>
@@ -254,6 +273,7 @@ function renderLeaderboard() {
 
 function renderPicksGrid(r) {
   const byGroup = {};
+  const liveSet = liveTeamSet();
   for (const row of r.teamRows) (byGroup[row.group] ||= []).push(row);
 
   return Object.keys(byGroup)
@@ -262,10 +282,11 @@ function renderPicksGrid(r) {
       const teamsHtml = byGroup[g]
         .map(({ team, stats }) => {
           const isChamp = team.name === r.entrant.champion;
+          const live = liveSet.has(team.name) ? ' <span class="live-dot">●</span>' : '';
           return `
             <div class="pick-team ${stats.eliminated ? 'out' : ''}">
               ${flagImg(team.name, 22)}
-              <span class="tname">${esc(team.name)}${isChamp ? ' 👑' : ''}
+              <span class="tname">${esc(team.name)}${isChamp ? ' 👑' : ''}${live}
                 <span class="record">${stats.w}W-${stats.d}D-${stats.l}L · ${stats.cs}CS</span>
               </span>
               <span class="tpts">${stats.pts}</span>

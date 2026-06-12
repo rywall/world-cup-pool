@@ -192,6 +192,21 @@ main {
   font-style: italic;
 }
 
+/* subtle "their team is playing right now" note */
+.lb-live {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--live-red);
+  margin-top: 3px;
+}
+
+.live-dot {
+  display: inline-block;
+  color: var(--live-red);
+  font-size: 0.85em;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
 .pts-big {
   font-family: 'Russo One', sans-serif;
   font-size: 1.5rem;
