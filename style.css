@@ -271,6 +271,26 @@ main {
 .pick-team.out { opacity: 0.45; }
 .pick-team.out .tname { text-decoration: line-through; }
 
+.picks-tiebreak {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #d4ddca;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 0.78rem;
+  color: #495a4f;
+}
+.picks-tiebreak b { color: var(--ink); }
+.picks-tiebreak .tb-label {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #5d6f63;
+  margin-right: 2px;
+}
+
 /* ---------- Matches ---------- */
 .filter-chips { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 
