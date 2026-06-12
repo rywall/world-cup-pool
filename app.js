@@ -287,6 +287,7 @@ function renderLeaderboard() {
   // Mbappé mode: while Ryan's picks are open, the header balls become Kylian
   // and the pitch repaints in France colours (see .mbappe-mode in style.css).
   document.body.classList.toggle('mbappe-mode', expanded.has('Ryan'));
+  setHeadRain(expanded.has('Ryan'));
 
   container.querySelectorAll('.lb-row').forEach((tr) =>
     tr.addEventListener('click', () => {
@@ -411,6 +412,56 @@ function renderMatchDetail(g) {
   };
   return `<div class="match-detail-inner">${side('home')}${side('away')}</div>`;
 }
+
+// ---------- Mbappé head rain ----------
+// On phones, Mbappé mode also makes it rain Kylians: a 5-second downpour each
+// time Ryan's picks open. Heads clean themselves up when their fall ends.
+
+const mobileQuery = window.matchMedia('(max-width: 560px)');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const headRain = { on: false, timer: null, stopTimer: null, layer: null };
+
+function setHeadRain(on) {
+  headRain.on = on;
+  const want = on && mobileQuery.matches && !reducedMotion.matches;
+  // The layer marks an episode in progress, so re-renders while Ryan's picks
+  // stay open don't restart the downpour after its 5 seconds are up.
+  if (want === !!headRain.layer) return;
+
+  if (want) {
+    const layer = document.createElement('div');
+    layer.className = 'head-rain';
+    document.body.appendChild(layer);
+    headRain.layer = layer;
+    const drop = () => {
+      if (headRain.layer !== layer) return;
+      const img = document.createElement('img');
+      img.src = 'images/mbappe-head.png';
+      img.alt = '';
+      img.className = 'head-drop';
+      img.style.left = `${Math.random() * 96}%`;
+      img.style.width = `${26 + Math.random() * 28}px`;
+      img.style.animationDuration = `${2.4 + Math.random() * 2.2}s`;
+      img.addEventListener('animationend', () => img.remove());
+      layer.appendChild(img);
+    };
+    for (let i = 0; i < 8; i++) setTimeout(drop, i * 160);
+    headRain.timer = setInterval(drop, 280);
+    headRain.stopTimer = setTimeout(() => {
+      clearInterval(headRain.timer);
+      headRain.timer = null;
+    }, 5000);
+  } else {
+    clearInterval(headRain.timer);
+    clearTimeout(headRain.stopTimer);
+    headRain.timer = headRain.stopTimer = null;
+    headRain.layer?.remove();
+    headRain.layer = null;
+  }
+}
+
+// Re-check when the viewport crosses the mobile breakpoint (e.g. rotation).
+mobileQuery.addEventListener('change', () => setHeadRain(headRain.on));
 
 // ---------- goal celebrations ----------
 // Compare scores between refreshes; any increase triggers a full-screen

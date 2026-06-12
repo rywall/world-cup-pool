@@ -137,6 +137,29 @@ body.mbappe-mode {
   50% { transform: rotate(16deg); }
 }
 
+/* On mobile, Mbappé mode also rains heads (spawned from app.js setHeadRain). */
+.head-rain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.head-drop {
+  position: absolute;
+  top: -60px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  animation-name: headRainFall;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes headRainFall {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(115vh) rotate(540deg); }
+}
+
 .status-bar {
   text-align: center;
   font-size: 0.78rem;
@@ -626,7 +649,7 @@ main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
 
 @media (prefers-reduced-motion: reduce) {
   .goal-celebration, .goal-word, .goal-team, .goal-score, .goal-picked { animation: none; }
-  .confetti-piece { display: none; }
+  .confetti-piece, .head-drop { display: none; }
 
   .loader-ball, .loader-shadow, .loader-text, .spin, .spin-rev,
   .mbappe-mode .spin, .mbappe-mode .spin-rev,
