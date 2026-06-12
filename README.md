@@ -1,4 +1,4 @@
-# ⚽ Family World Cup Pool 2026
+# ⚽ Templeman World Cup Pool 2026
 
 A soccer-themed website that pulls **live 2026 World Cup scores** and ranks every
 family member's bracket using the official family pool rules:

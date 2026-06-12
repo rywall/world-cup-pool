@@ -1,4 +1,4 @@
-/* Family World Cup Pool — scoring engine + rendering (runs 100% in the browser) */
+/* Templeman World Cup Pool — scoring engine + rendering (runs 100% in the browser) */
 
 const REFRESH_MS = 60 * 1000;
 
