@@ -333,7 +333,9 @@ main {
   padding: 7px 10px;
   border-radius: 10px;
   cursor: pointer;
+  transition: transform 0.12s ease;
 }
+.match-row:hover { transform: scale(1.015); }
 .match-item:nth-child(even) .match-row { background: #f1f7ee; }
 .match-item.open .match-row { background: #e7f1e4; }
 
