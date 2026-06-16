@@ -416,8 +416,8 @@ function renderMatchDetail(g) {
 }
 
 // ---------- Mbappé head rain ----------
-// On phones, Mbappé mode also makes it rain Kylians: a 5-second downpour each
-// time Ryan's picks open. Heads clean themselves up when their fall ends.
+// Mbappé mode also makes it rain Kylians: a 5-second downpour each time Ryan's
+// picks open. Heads clean themselves up when their fall ends.
 
 const mobileQuery = window.matchMedia('(max-width: 560px)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -425,7 +425,7 @@ const headRain = { on: false, timer: null, stopTimer: null, layer: null };
 
 function setHeadRain(on) {
   headRain.on = on;
-  const want = on && mobileQuery.matches && !reducedMotion.matches;
+  const want = on && !reducedMotion.matches;
   // The layer marks an episode in progress, so re-renders while Ryan's picks
   // stay open don't restart the downpour after its 5 seconds are up.
   if (want === !!headRain.layer) return;
