@@ -196,25 +196,6 @@ main {
 
 .hint { margin: 0 0 14px; font-size: 0.85rem; color: #5d6f63; }
 
-/* ---------- Daily recap ---------- */
-.recap-card { border-color: var(--gold); }
-
-.recap-card .recap-date {
-  float: right;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: #fff;
-  background: var(--accent);
-  border-radius: 999px;
-  padding: 4px 10px;
-  margin-top: 2px;
-}
-
-.recap-card p { margin: 0 0 10px; line-height: 1.55; }
-.recap-card p:last-child { margin-bottom: 0; }
-
 /* ---------- Live strip ---------- */
 .live-strip {
   display: flex;
