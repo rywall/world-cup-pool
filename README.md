@@ -39,7 +39,7 @@ the site shows a warning banner telling you which pick to fix.
 
 ## Notes / edge cases
 
-- Knockout matches tied after extra time score as a **draw (1 pt)** for both
-  teams. The champion is still detected correctly if the final goes to
-  penalties (ESPN marks the shootout winner).
+- Knockout matches tied after extra time are decided by the shootout: the
+  shootout winner scores a **win (3 pts)** and the loser a loss (ESPN marks
+  the shootout winner). Only group-stage matches can end in a draw.
 - Match times are shown in your local timezone.

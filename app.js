@@ -126,11 +126,12 @@ function teamStats(teamName) {
     s.gf += us.score;
     s.ga += them.score;
     if (them.score === 0) s.cs++;
-    // Wins/draws use the score after extra time; a knockout game decided on
-    // penalties counts as a draw (1 pt), per the family rules.
-    if (us.score > them.score) s.w++;
-    else if (us.score === them.score) s.d++;
-    else s.l++;
+    // A knockout game tied after extra time is settled by the shootout:
+    // ESPN sets the winner flag on the shootout winner, so it scores as a
+    // win/loss. Only games with no winner flagged (group stage) are draws.
+    if (us.score > them.score || (us.score === them.score && us.winner)) s.w++;
+    else if (us.score < them.score || them.winner) s.l++;
+    else s.d++;
     // ESPN sets the winner flag even for penalty shootouts, so elimination
     // tracking stays correct when a knockout game is tied after extra time.
     if (g.round !== 'group-stage' && g.round !== '3rd-place-match' && them.winner) s.eliminated = true;
@@ -384,15 +385,15 @@ function entrantsWithTeam(teamName) {
 }
 
 // Points a single team earned in one match (win/draw/clean-sheet), mirroring
-// the season-long rules in teamStats: a knockout game tied after extra time is
-// a draw, and a clean sheet is keeping the opponent off the scoreboard.
+// the season-long rules in teamStats: a shootout counts as a win/loss (ESPN
+// flags the winner), and a clean sheet is keeping the opponent off the scoreboard.
 function matchPoints(g, side) {
   const us = g[side];
   const them = side === 'home' ? g.away : g.home;
   const parts = [];
   let pts = 0;
-  if (us.score > them.score) { pts += POOL_CONFIG.pointsPerWin; parts.push(`Win +${POOL_CONFIG.pointsPerWin}`); }
-  else if (us.score === them.score) { pts += POOL_CONFIG.pointsPerDraw; parts.push(`Draw +${POOL_CONFIG.pointsPerDraw}`); }
+  if (us.score > them.score || (us.score === them.score && us.winner)) { pts += POOL_CONFIG.pointsPerWin; parts.push(`Win +${POOL_CONFIG.pointsPerWin}`); }
+  else if (us.score === them.score && !them.winner) { pts += POOL_CONFIG.pointsPerDraw; parts.push(`Draw +${POOL_CONFIG.pointsPerDraw}`); }
   if (them.score === 0) { pts += POOL_CONFIG.pointsPerCleanSheet; parts.push(`Clean sheet +${POOL_CONFIG.pointsPerCleanSheet}`); }
   return { pts, parts };
 }
