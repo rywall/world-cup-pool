@@ -100,6 +100,21 @@ function liveTeamSet() {
 
 // ---------- scoring ----------
 
+// Teams knocked out in the group stage never lose a knockout game, so the
+// loss-based check in teamStats misses them. Once every round-of-32 fixture
+// has real teams the knockout field is settled; anyone outside it is out.
+// Returns null while the draw is still (partly) TBD.
+function knockoutFieldSet() {
+  const r32 = games.filter((g) => g.round === 'round-of-32');
+  if (!r32.length || !r32.every(hasTeams)) return null;
+  const field = new Set();
+  for (const g of r32) {
+    field.add(g.home.name);
+    field.add(g.away.name);
+  }
+  return field;
+}
+
 function teamStats(teamName) {
   const s = { w: 0, d: 0, l: 0, cs: 0, gf: 0, ga: 0, played: 0, eliminated: false };
   for (const g of games) {
@@ -120,6 +135,8 @@ function teamStats(teamName) {
     // tracking stays correct when a knockout game is tied after extra time.
     if (g.round !== 'group-stage' && g.round !== '3rd-place-match' && them.winner) s.eliminated = true;
   }
+  const field = knockoutFieldSet();
+  if (field && !field.has(teamName)) s.eliminated = true;
   s.pts = s.w * POOL_CONFIG.pointsPerWin + s.d * POOL_CONFIG.pointsPerDraw + s.cs * POOL_CONFIG.pointsPerCleanSheet;
   return s;
 }
