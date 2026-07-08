@@ -660,6 +660,91 @@ main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
   .lb-row { transition: none !important; }
 }
 
+/* ---------- Secret side pool (sidepool.html) ---------- */
+/* The header ball secretly links between the main page and the side pool. */
+.secret-ball { text-decoration: none; color: inherit; cursor: pointer; }
+
+.vs-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.vs-side {
+  background: #f1f7ee;
+  border: 3px solid #dde8dc;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+.vs-side.leading {
+  background: linear-gradient(180deg, #fff3c4, #ffe89a);
+  border-color: var(--gold);
+}
+
+.vs-name { font-family: 'Russo One', sans-serif; font-size: 1.15rem; }
+
+.vs-total {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2.6rem;
+  color: var(--grass-darker);
+  margin: 4px 0 6px;
+}
+
+.vs-breakdown { font-size: 0.78rem; color: #495a4f; }
+.vs-breakdown b { color: var(--ink); }
+
+.vs-teams {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #d4ddca;
+  text-align: left;
+}
+
+.vs-badge {
+  align-self: center;
+  font-family: 'Russo One', sans-serif;
+  font-size: 1.3rem;
+  background: #101418;
+  color: var(--gold);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.vs-tied {
+  text-align: center;
+  font-weight: 800;
+  color: var(--grass-darker);
+  margin: 12px 0 0;
+}
+
+.animate-in .vs-side { animation: cardIn 0.55s ease backwards; }
+.animate-in .vs-side:last-child { animation-delay: 0.12s; }
+
+.owner-chip {
+  font-size: 0.62rem;
+  font-weight: 800;
+  background: #e8f5e9;
+  border: 1px solid #bcd9c0;
+  border-radius: 99px;
+  padding: 1px 7px;
+  margin: 0 6px;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .vs-grid { grid-template-columns: 1fr; }
+  .vs-badge { justify-self: center; width: 44px; height: 44px; font-size: 1.05rem; }
+  .owner-chip { display: block; width: fit-content; margin: 2px 0 0 auto; }
+  .match-team:not(.home) .owner-chip { margin-left: 0; }
+}
+
 /* ---------- Rules / footer ---------- */
 .rules-list { margin: 8px 0 0; padding-left: 20px; line-height: 1.9; font-size: 0.92rem; }
 

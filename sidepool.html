@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isabel vs James — Secret Side Pool</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤫</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="pitch-lines" aria-hidden="true"></div>
+
+  <header class="scoreboard">
+    <div class="scoreboard-inner">
+      <a class="secret-ball" href="index.html" aria-label="Back to the main pool"><span class="ball spin"><span class="ball-emoji">⚽</span></span></a>
+      <div class="title-block">
+        <h1>Isabel vs James</h1>
+        <p class="subtitle">🤫 Secret side pool · 4 teams each · quarterfinals onward</p>
+      </div>
+      <a class="secret-ball" href="index.html" aria-label="Back to the main pool"><span class="ball spin-rev"><span class="ball-emoji">⚽</span></span></a>
+    </div>
+    <div class="status-bar">
+      <span id="updateStatus">Loading live scores…</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="card versus-card">
+      <h2><span class="emoji">🥊</span> Head to head</h2>
+      <div id="versus">
+        <div class="loader">
+          <span class="loader-ball">⚽</span>
+          <div class="loader-shadow"></div>
+          <p class="loader-text">Inflating the match ball…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card matches-card">
+      <h2><span class="emoji">📺</span> Matches that count</h2>
+      <p class="hint">Only the quarterfinals, semifinals, 3rd place match, and final score points here.</p>
+      <div id="matches">
+        <div class="loader">
+          <span class="loader-ball">⚽</span>
+          <div class="loader-shadow"></div>
+          <p class="loader-text">Mowing the pitch…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card rules-card">
+      <h2><span class="emoji">📋</span> Side pool rules</h2>
+      <ul class="rules-list">
+        <li>Isabel and James each picked <strong>4 teams</strong></li>
+        <li>Only matches from the <strong>quarterfinals onward</strong> count</li>
+        <li><strong>+3</strong> every time one of your picked teams <strong>wins</strong></li>
+        <li><strong>+1</strong> every time one of your picked teams <strong>draws</strong></li>
+        <li><strong>+1</strong> every <strong>clean sheet</strong> (your team allows 0 goals)</li>
+        <li>Tiebreaker #1: cumulative goals scored by your teams · Tiebreaker #2: cumulative goal difference (+/−)</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>🤫 Shhh… this page is a secret — scores refresh every minute 🤫</p>
+  </footer>
+
+  <script src="teams.js"></script>
+  <script src="sidepool.js"></script>
+</body>
+</html>
