@@ -651,7 +651,7 @@ main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
   .goal-celebration, .goal-word, .goal-team, .goal-score, .goal-picked { animation: none; }
   .confetti-piece, .head-drop { display: none; }
 
-  .loader-ball, .loader-shadow, .loader-text, .spin, .spin-rev,
+  .loader-ball, .loader-shadow, .loader-text, .spin, .spin-rev, .wiggle, .wiggle-rev,
   .mbappe-mode .spin, .mbappe-mode .spin-rev,
   main > section.card, .animate-in .lb-row, .animate-in .match-row,
   .match-detail, .match-caret,
@@ -663,6 +663,11 @@ main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
 /* ---------- Secret side pool (sidepool.html) ---------- */
 /* The header ball secretly links between the main page and the side pool. */
 .secret-ball { text-decoration: none; color: inherit; cursor: pointer; }
+
+/* the side pool's header mascots wiggle instead of spinning */
+.wiggle,
+.wiggle-rev { display: inline-block; animation: headShake 1.8s ease-in-out infinite; }
+.wiggle-rev { animation-delay: -0.9s; }
 
 .vs-grid {
   display: grid;
