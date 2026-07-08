@@ -683,7 +683,7 @@ main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
   border-color: var(--gold);
 }
 
-.vs-name { font-family: 'Russo One', sans-serif; font-size: 1.15rem; }
+.vs-name { font-family: 'Russo One', sans-serif; font-size: 1.7rem; }
 
 .vs-total {
   font-family: 'Russo One', sans-serif;
@@ -728,7 +728,7 @@ main > section.card:nth-of-type(4) { animation-delay: 0.3s; }
 .animate-in .vs-side:last-child { animation-delay: 0.12s; }
 
 .owner-chip {
-  font-size: 0.62rem;
+  font-size: 0.8rem;
   font-weight: 800;
   background: #e8f5e9;
   border: 1px solid #bcd9c0;
