@@ -5,7 +5,7 @@
 const REFRESH_MS = 60 * 1000;
 
 const SIDE_POOL = [
-  { name: 'Isabel', emoji: '🦄', teams: ['France', 'Belgium', 'Norway', 'Argentina'] },
+  { name: 'Isabel', emoji: '🐉', teams: ['France', 'Belgium', 'Norway', 'Argentina'] },
   { name: 'James', emoji: '🦁', teams: ['Morocco', 'Spain', 'England', 'Switzerland'] },
 ];
 
