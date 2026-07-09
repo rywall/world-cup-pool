@@ -160,6 +160,10 @@ body.mbappe-mode {
   100% { transform: translateY(115vh) rotate(540deg); }
 }
 
+/* The two "Head" words in "Head to head" secretly rain strikers when tapped. */
+.head-trigger { cursor: pointer; }
+.head-trigger:hover { text-shadow: 0 0 12px rgba(245, 184, 12, 0.7); }
+
 .status-bar {
   text-align: center;
   font-size: 0.78rem;

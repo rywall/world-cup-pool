@@ -302,3 +302,40 @@ async function refresh() {
 
 refresh();
 setInterval(refresh, REFRESH_MS);
+
+// ---------- head-rain easter egg ----------
+// The two words in "Head to head" secretly rain strikers: the first "Head"
+// pours down Haaland, the second "head" pours down Yamal. Same look as Mbappé
+// mode on the main page — reuses .head-rain / .head-drop from style.css.
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function rainHeads(src) {
+  if (reducedMotion.matches) return;
+  const layer = document.createElement('div');
+  layer.className = 'head-rain';
+  document.body.appendChild(layer);
+  const drop = () => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.className = 'head-drop';
+    img.style.left = `${Math.random() * 96}%`;
+    img.style.width = `${26 + Math.random() * 28}px`;
+    img.style.animationDuration = `${2.4 + Math.random() * 2.2}s`;
+    img.addEventListener('animationend', () => img.remove());
+    layer.appendChild(img);
+  };
+  for (let i = 0; i < 8; i++) setTimeout(drop, i * 160);
+  const timer = setInterval(drop, 280);
+  // Stop spawning after 5s, then bin the layer once the last heads have landed.
+  setTimeout(() => {
+    clearInterval(timer);
+    setTimeout(() => layer.remove(), 5000);
+  }, 5000);
+}
+
+const HEAD_SRC = { haaland: 'images/haaland-head.png', yamal: 'images/yamal-head.png' };
+document.querySelectorAll('.head-trigger').forEach((el) => {
+  el.addEventListener('click', () => rainHeads(HEAD_SRC[el.dataset.head]));
+});
